@@ -1,18 +1,25 @@
 const express = require('express');
-const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
 
 const app = express();
 
-app.use(expressLayouts);
 app.set('view engine', 'ejs');
+app.use(
+    session({
+        secret: 'secret',
+        resave: true,
+        saveUninitialized: true
+    })
+);
 
 app.use(express.static('public'));
 
 app.use(express.urlencoded({ extended: true }));
 
+
 app.get('/', (req, res) => {
     res.render('index');
-})
+});
 
 const PORT = process.env.PORT || 3000;
 
