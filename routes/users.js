@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 // Load User model
 const User = require('../models/User');
+const Point = require('../models/point');
 const { forwardAuthenticated } = require('../config/auth');
 
 // Login Page
@@ -90,6 +91,30 @@ router.get('/logout', (req, res) => {
     req.logout();
     req.flash('success_msg', 'You are logged out');
     res.redirect('/users/login');
+});
+
+router.post('/submitPoints', (req, res) => {
+    const { pointValue } = req.body;
+    console.log(req.user.email);
+    let earnedBy = req.user.name;
+    let houseName = User.getStudentHouse(req.user.email);
+    let studentID = 100;
+    let newPoint = new Point({
+        pointValue: pointValue,
+        earnedBy: earnedBy,
+        houseName: houseName,
+        studentID: studentID
+    });
+
+    newPoint.save().then(
+        (point) => {
+            req.flash('points_submit_success', 'You\'re point contribution has been recorded');
+        }
+    ).catch(
+        (err) => {
+            console.log(err);
+        }
+    );
 });
 
 module.exports = router;
