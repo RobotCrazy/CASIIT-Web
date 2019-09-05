@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    houseName: {
+        type: String,
+        required: false
+    },
     date: {
         type: Date,
         default: Date.now
@@ -24,5 +28,5 @@ const User = mongoose.model('User', UserSchema);
 module.exports = User;
 
 module.exports.getStudentHouse = function(studentEmail) {
-    return this.findOne({ email: studentEmail }, 'houseName', (err, User) => {});
+    this.findOne({ email: studentEmail }, 'houseName', (err, User) => {});
 }

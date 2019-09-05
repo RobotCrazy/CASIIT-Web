@@ -13,8 +13,8 @@ const PointSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    studentID: {
-        type: Number,
+    studentEmail: {
+        type: String,
         required: true
     },
     date: {

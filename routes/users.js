@@ -16,6 +16,7 @@ router.get('/register', forwardAuthenticated, (req, res) => res.render('register
 // Register
 router.post('/register', (req, res) => {
     const { name, email, password, password2 } = req.body;
+    let houseName = "House Name here"
     let errors = [];
 
     if (!name || !email || !password || !password2) {
@@ -53,7 +54,8 @@ router.post('/register', (req, res) => {
                 const newUser = new User({
                     name,
                     email,
-                    password
+                    password,
+                    houseName
                 });
 
                 bcrypt.genSalt(10, (err, salt) => {
@@ -95,26 +97,32 @@ router.get('/logout', (req, res) => {
 
 router.post('/submitPoints', (req, res) => {
     const { pointValue } = req.body;
-    console.log(req.user.email);
+    console.log(req.user.houseName);
     let earnedBy = req.user.name;
-    let houseName = User.getStudentHouse(req.user.email);
-    let studentID = 100;
-    let newPoint = new Point({
-        pointValue: pointValue,
-        earnedBy: earnedBy,
-        houseName: houseName,
-        studentID: studentID
-    });
+    let studentEmail = req.user.email;
+    let studentHouseName;
+    let newPoint;
+    User.findOne({ 'email': req.user.email }, 'houseName', (err, user) => {
+        studentHouseName = user.houseName;
+        newPoint = new Point({
+            pointValue: pointValue,
+            earnedBy: earnedBy,
+            houseName: studentHouseName,
+            studentEmail: studentEmail
+        });
+        newPoint.save().then(
+            (point) => {
+                req.flash('points_submit_success', 'You\'re point contribution has been recorded');
+                res.redirect('/members');
+            }
+        ).catch(
+            (err) => {
+                console.log(err);
+            }
+        );
+    });;
 
-    newPoint.save().then(
-        (point) => {
-            req.flash('points_submit_success', 'You\'re point contribution has been recorded');
-        }
-    ).catch(
-        (err) => {
-            console.log(err);
-        }
-    );
+
 });
 
 module.exports = router;
