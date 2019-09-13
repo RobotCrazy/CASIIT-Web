@@ -50,6 +50,7 @@ app.get('/', (req, res) => {
 
 app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
+app.use('/points', require('./routes/points.js'));
 
 const PORT = process.env.PORT || 3000;
 

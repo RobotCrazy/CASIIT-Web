@@ -25,4 +25,8 @@ const PointSchema = new mongoose.Schema({
 
 const Point = mongoose.model('Point', PointSchema);
 
+// module.exports.getPointsByUserEmail = function(userEmail) {
+//     let results = 
+// }
+
 module.exports = Point;
